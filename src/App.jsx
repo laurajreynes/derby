@@ -502,9 +502,9 @@ export default function RingRingDerby() {
             <svg viewBox={`0 0 ${svgW} ${svgH}`} style={{ width: "100%", height: "auto", display: "block", borderRadius: "16px", overflow: "hidden" }}>
               <defs>
                 <radialGradient id="grassField" cx="50%" cy="45%" r="55%">
-                  <stop offset="0%" stopColor="#22c55e" stopOpacity="0.3" />
-                  <stop offset="40%" stopColor="#16a34a" stopOpacity="0.25" />
-                  <stop offset="100%" stopColor="#15803d" stopOpacity="0.2" />
+                  <stop offset="0%" stopColor="#7A8C52" stopOpacity="0.25" />
+                  <stop offset="40%" stopColor="#6B7D45" stopOpacity="0.2" />
+                  <stop offset="100%" stopColor="#5C6B3C" stopOpacity="0.15" />
                 </radialGradient>
                 <linearGradient id="dirtMain" x1="0%" y1="0%" x2="0%" y2="100%">
                   <stop offset="0%" stopColor="#a3784a" />
@@ -516,8 +516,8 @@ export default function RingRingDerby() {
                 </filter>
               </defs>
 
-              <rect width={svgW} height={svgH} fill="#f8faf8" />
-              <ellipse cx={cx} cy={cy} rx={rx + 50} ry={ry + 38} fill="#f0f4f0" />
+              <rect width={svgW} height={svgH} fill="#F5F6F0" />
+              <ellipse cx={cx} cy={cy} rx={rx + 50} ry={ry + 38} fill="#ECEEE5" />
               <ellipse cx={cx} cy={cy} rx={rx + 30} ry={ry + 22} fill="none" stroke="url(#dirtMain)" strokeWidth="62" filter="url(#trackShadow)" />
 
               {dirtDots.map((d, i) => {
@@ -542,11 +542,11 @@ export default function RingRingDerby() {
                 return <line key={`ip${i}`} x1={cx + (rx - 4) * Math.cos(a)} y1={cy + (ry - 4) * Math.sin(a)} x2={cx + (rx - 4) * Math.cos(a)} y2={cy + (ry - 4) * Math.sin(a) - 4} stroke="rgba(255,255,255,0.5)" strokeWidth="1" strokeLinecap="round" />;
               })}
 
-              <ellipse cx={cx} cy={cy} rx={rx - 8} ry={ry - 7} fill="#e8f5e9" />
+              <ellipse cx={cx} cy={cy} rx={rx - 8} ry={ry - 7} fill="#EFF2E8" />
               <ellipse cx={cx} cy={cy} rx={rx - 8} ry={ry - 7} fill="url(#grassField)" />
               {Array.from({ length: 14 }).map((_, i) => (
                 <ellipse key={`mow${i}`} cx={cx} cy={cy} rx={(rx - 30) * (1 - i * 0.055)} ry={(ry - 25) * (1 - i * 0.055)}
-                  fill="none" stroke={i % 2 === 0 ? "rgba(34,197,94,0.08)" : "rgba(22,163,74,0.05)"} strokeWidth="4" />
+                  fill="none" stroke={i % 2 === 0 ? "rgba(92,107,60,0.08)" : "rgba(107,125,69,0.05)"} strokeWidth="4" />
               ))}
 
               <text x={cx} y={cy - 18} textAnchor="middle" fill="rgba(0,0,0,0.05)" fontSize="44" fontFamily="'Inter', sans-serif" fontWeight="900" letterSpacing="4">RING RING</text>
