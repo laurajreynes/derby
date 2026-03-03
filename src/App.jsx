@@ -30,6 +30,10 @@ const CATEGORIES = [
 // Race phases: loading → gate → countdown → racing → settled → reveal
 const PHASES = { LOADING: 0, GATE: 1, COUNTDOWN: 2, RACING: 3, SETTLED: 4, REVEAL: 5 };
 
+// If you deploy to Vercel, paste your published Google Sheet CSV URL here:
+// (File → Share → Publish to web → select Sheet1 → CSV → Publish → copy the link)
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTjLoh3rv5_wrV7XI-cmtdVsQzI6s9JOkYdBE3dc_efDaSzcKD2Vbd99fkYUENrOcK4C3gwzk6oxOq8/pub?gid=0&single=true&output=csv";
+
 function getTrackPos(progress, cx, cy, rx, ry) {
   const angle = -Math.PI / 2 + progress * 2 * Math.PI;
   return { x: cx + rx * Math.cos(angle), y: cy + ry * Math.sin(angle), angle };
@@ -54,20 +58,52 @@ export default function RingRingDerby() {
   const [howToScoreOpen, setHowToScoreOpen] = useState(false);
   const inputRef = useRef(null);
 
-  // Load saved scores on mount
+  // Load saved scores on mount — tries Google Sheet first, then window.storage
   useEffect(() => {
     const loadScores = async () => {
+      // Try Google Sheet CSV first
+      if (SHEET_CSV_URL) {
+        try {
+          const resp = await fetch(SHEET_CSV_URL);
+          const text = await resp.text();
+          const rows = text.trim().split("\n").slice(1); // skip header
+          const sheetData = rows.map(row => {
+            const cols = row.split(",").map(c => c.trim());
+            return { abbr: cols[0], mystery: parseInt(cols[1]) || 0, calls: parseInt(cols[2]) || 0, coaching: parseInt(cols[3]) || 0 };
+          }).filter(d => d.abbr);
+          if (sheetData.length > 0) {
+            setStores(prev => prev.map(store => {
+              const match = sheetData.find(s => s.abbr === store.abbr);
+              if (match) return { ...store, calls: match.calls, mystery: match.mystery, coaching: match.coaching };
+              return store;
+            }));
+            setLoaded(true);
+            return;
+          }
+        } catch (e) { /* fall through to window.storage */ }
+      }
+      // Fallback: window.storage (Claude artifact) or localStorage (Vercel)
       try {
-        const result = await Promise.resolve(localStorage.getItem("derby-scores"));
-        const raw = result; if (raw) {
-          const saved = JSON.parse(raw);
-          setStores(prev => prev.map(store => {
-            const savedStore = saved.find(s => s.abbr === store.abbr);
-            if (savedStore) {
-              return { ...store, calls: savedStore.calls || 0, mystery: savedStore.mystery || 0, coaching: savedStore.coaching || 0 };
-            }
-            return store;
-          }));
+        if (window.storage) {
+          const result = await window.storage.get("derby-scores", true);
+          if (result && result.value) {
+            const saved = JSON.parse(result.value);
+            setStores(prev => prev.map(store => {
+              const savedStore = saved.find(s => s.abbr === store.abbr);
+              if (savedStore) return { ...store, calls: savedStore.calls || 0, mystery: savedStore.mystery || 0, coaching: savedStore.coaching || 0 };
+              return store;
+            }));
+          }
+        } else {
+          const raw = localStorage.getItem("derby-scores");
+          if (raw) {
+            const saved = JSON.parse(raw);
+            setStores(prev => prev.map(store => {
+              const savedStore = saved.find(s => s.abbr === store.abbr);
+              if (savedStore) return { ...store, calls: savedStore.calls || 0, mystery: savedStore.mystery || 0, coaching: savedStore.coaching || 0 };
+              return store;
+            }));
+          }
         }
       } catch (e) {}
       setLoaded(true);
@@ -75,13 +111,17 @@ export default function RingRingDerby() {
     loadScores();
   }, []);
 
-  // Save scores whenever they change
+  // Save scores whenever they change (skip if using Google Sheet)
   useEffect(() => {
-    if (!loaded) return;
+    if (!loaded || SHEET_CSV_URL) return;
     const saveScores = async () => {
       try {
         const toSave = stores.map(s => ({ abbr: s.abbr, calls: s.calls, mystery: s.mystery, coaching: s.coaching }));
-        localStorage.setItem("derby-scores", JSON.stringify(toSave));
+        if (window.storage) {
+          await window.storage.set("derby-scores", JSON.stringify(toSave), true);
+        } else {
+          localStorage.setItem("derby-scores", JSON.stringify(toSave));
+        }
       } catch (e) {}
     };
     saveScores();
@@ -139,7 +179,8 @@ export default function RingRingDerby() {
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); clearTimeout(t5); };
   }, [loaded]);
 
-  const maxScore = Math.max(...stores.map(getTotal), 1);
+  const TARGET_MAX = 50; // Full lap = 50 points, so small scores = small moves
+  const maxScore = TARGET_MAX;
   const rankedStores = [...stores].sort((a, b) => getTotal(b) - getTotal(a));
   const eastTotal = stores.filter(s => s.region === "East").reduce((sum, s) => sum + getTotal(s), 0);
   const westTotal = stores.filter(s => s.region === "West").reduce((sum, s) => sum + getTotal(s), 0);
@@ -175,19 +216,23 @@ export default function RingRingDerby() {
   // During racing, interpolate positions from gate (0) to final
   const getAnimatedProgress = useCallback((store, i) => {
     const total = getTotal(store);
-    const finalProgress = maxScore > 0 ? Math.min(total / maxScore, 0.97) : 0;
-    const finalStaggered = total === 0 ? (i * 0.004) : finalProgress;
+    const finalProgress = maxScore > 0 ? Math.min(total / maxScore, 0.90) : 0;
+    
+    // For ties: find how many stores share this score and this store's index among them
+    const sameScoreStores = stores.filter(s => getTotal(s) === total);
+    const tieIndex = sameScoreStores.findIndex(s => s.abbr === store.abbr);
+    const tieOffset = sameScoreStores.length > 1 ? (tieIndex - (sameScoreStores.length - 1) / 2) * 0.008 : 0;
+    
+    const finalStaggered = total === 0 ? (i * 0.004) : (finalProgress + tieOffset);
 
     if (phase <= PHASES.COUNTDOWN) {
-      // All at starting gate, slightly staggered so they're not stacked
       return i * 0.003;
     } else if (phase === PHASES.RACING) {
-      // Interpolate from gate to final position
       const gatePos = i * 0.003;
       return gatePos + (finalStaggered - gatePos) * raceProgress;
     }
     return finalStaggered;
-  }, [phase, raceProgress, maxScore]);
+  }, [phase, raceProgress, maxScore, stores]);
 
   const horsesWithPos = useMemo(() => {
     return stores.map((store, i) => {
@@ -421,7 +466,7 @@ export default function RingRingDerby() {
       </div>
 
       {/* Admin editor */}
-      {isAdmin && (
+      {isAdmin && !SHEET_CSV_URL && (
         <>
           <div style={{ display: "flex", justifyContent: "center", marginBottom: "14px" }}>
             <button onClick={() => setShowEditor(!showEditor)} style={{
