@@ -499,7 +499,7 @@ export default function RingRingDerby() {
       <div style={{ maxWidth: "940px", margin: "0 auto", position: "relative" }}>
         <div style={{ perspective: "1600px", perspectiveOrigin: "50% 15%" }}>
           <div style={{ transform: "rotateX(14deg)", transformOrigin: "50% 50%", position: "relative" }}>
-            <svg viewBox={`0 0 ${svgW} ${svgH}`} style={{ width: "100%", height: "auto", display: "block", borderRadius: "16px", overflow: "hidden" }}>
+            <svg viewBox={`0 0 ${svgW} ${svgH}`} style={{ width: "100%", height: "auto", display: "block", overflow: "visible" }}>
               <defs>
                 <radialGradient id="grassField" cx="50%" cy="45%" r="55%">
                   <stop offset="0%" stopColor="#7A8C52" stopOpacity="0.25" />
@@ -516,8 +516,8 @@ export default function RingRingDerby() {
                 </filter>
               </defs>
 
-              <rect width={svgW} height={svgH} fill="#F5F6F0" />
-              <ellipse cx={cx} cy={cy} rx={rx + 50} ry={ry + 38} fill="#ECEEE5" />
+              <rect width={svgW} height={svgH} fill="transparent" />
+              <ellipse cx={cx} cy={cy} rx={rx + 50} ry={ry + 38} fill="transparent" />
               <ellipse cx={cx} cy={cy} rx={rx + 30} ry={ry + 22} fill="none" stroke="url(#dirtMain)" strokeWidth="62" filter="url(#trackShadow)" />
 
               {dirtDots.map((d, i) => {
