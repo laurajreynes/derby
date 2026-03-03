@@ -23,7 +23,7 @@ const STORES_INIT = [
 
 const CATEGORIES = [
   { key: "mystery", label: "Mystery Shop", desc: "Share Inbound Scorecard with a manager or rep", icon: "🕵️", short: "Mystery", pts: 1 },
-  { key: "calls", label: "Call Recordings", desc: "Send 2 Call Guide calls to Liza = 3 pts", icon: "📞", short: "Calls", pts: 3 },
+  { key: "calls", label: "Call Shares", desc: "Share 2 calls from CarWars with Liza from two separate individuals that both follow Call Guides", icon: "📞", short: "Calls", pts: 3 },
   { key: "coaching", label: "Mgr Ring Ring Session", desc: "Trainer attends a Manager-held Ring Ring session (observing)", icon: "🎯", short: "Mgr RR", pts: 5 },
 ];
 
@@ -372,10 +372,10 @@ export default function RingRingDerby() {
 
       {/* Countdown + Region Scores */}
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", gap: "8px", marginBottom: "10px", flexWrap: "wrap", animation: "fadeInUp 0.6s ease 0.2s both" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 20px", background: "#EDF2F8", border: "1px solid #C8D6E5", borderRadius: "12px" }}>
-          <span style={{ fontSize: "16px" }}>🌴</span>
-          <span style={{ fontSize: "12px", fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase", color: "#4A6FA5" }}>East</span>
-          <span style={{ fontSize: "24px", fontWeight: 900, color: "#4A6FA5" }}>{phase >= PHASES.SETTLED ? eastTotal : "—"}</span>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 20px", background: "#F4F6EF", border: "1px solid #D5DCCA", borderRadius: "12px" }}>
+          <span style={{ fontSize: "16px" }}>🏔</span>
+          <span style={{ fontSize: "12px", fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase", color: "#5C6B3C" }}>West</span>
+          <span style={{ fontSize: "24px", fontWeight: 900, color: "#5C6B3C" }}>{phase >= PHASES.SETTLED ? westTotal : "—"}</span>
         </div>
         <div style={{
           display: "flex", flexDirection: "column", alignItems: "center",
@@ -386,14 +386,14 @@ export default function RingRingDerby() {
           <span style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase", color: "#999" }}>days left</span>
           <span style={{ fontSize: "9px", color: "#ccc", marginTop: "1px" }}>ends March 31</span>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 20px", background: "#F4F6EF", border: "1px solid #D5DCCA", borderRadius: "12px" }}>
-          <span style={{ fontSize: "16px" }}>🏔</span>
-          <span style={{ fontSize: "12px", fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase", color: "#5C6B3C" }}>West</span>
-          <span style={{ fontSize: "24px", fontWeight: 900, color: "#5C6B3C" }}>{phase >= PHASES.SETTLED ? westTotal : "—"}</span>
+        <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 20px", background: "#EDF2F8", border: "1px solid #C8D6E5", borderRadius: "12px" }}>
+          <span style={{ fontSize: "16px" }}>🌴</span>
+          <span style={{ fontSize: "12px", fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase", color: "#4A6FA5" }}>East</span>
+          <span style={{ fontSize: "24px", fontWeight: 900, color: "#4A6FA5" }}>{phase >= PHASES.SETTLED ? eastTotal : "—"}</span>
         </div>
       </div>
 
-      {/* East vs West bar — only after settled */}
+      {/* West vs East bar — only after settled */}
       <div style={{
         maxWidth: "500px", margin: "0 auto 10px",
         opacity: phase >= PHASES.SETTLED ? 1 : 0,
@@ -401,20 +401,20 @@ export default function RingRingDerby() {
       }}>
         <div style={{ display: "flex", height: "28px", borderRadius: "14px", overflow: "hidden", background: "#f0f0f0" }}>
           <div style={{
-            width: regionMax > 0 ? `${(eastTotal / regionMax) * 100}%` : "50%",
-            background: "linear-gradient(90deg, #2E4F73, #5B7FB5)",
+            width: regionMax > 0 ? `${(westTotal / regionMax) * 100}%` : "50%",
+            background: "linear-gradient(90deg, #4E5D32, #7A8C52)",
             transition: "width 1.2s cubic-bezier(0.34, 1.08, 0.64, 1)",
             display: "flex", alignItems: "center", justifyContent: "flex-start", paddingLeft: "10px", minWidth: "40px",
           }}>
-            <span style={{ fontSize: "11px", fontWeight: 800, color: "white" }}>🌴 {eastTotal}</span>
+            <span style={{ fontSize: "11px", fontWeight: 800, color: "white" }}>🏔 {westTotal}</span>
           </div>
           <div style={{
-            width: regionMax > 0 ? `${(westTotal / regionMax) * 100}%` : "50%",
-            background: "linear-gradient(90deg, #7A8C52, #4E5D32)",
+            width: regionMax > 0 ? `${(eastTotal / regionMax) * 100}%` : "50%",
+            background: "linear-gradient(90deg, #5B7FB5, #2E4F73)",
             transition: "width 1.2s cubic-bezier(0.34, 1.08, 0.64, 1)",
             display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: "10px", minWidth: "40px",
           }}>
-            <span style={{ fontSize: "11px", fontWeight: 800, color: "white" }}>{westTotal} 🏔</span>
+            <span style={{ fontSize: "11px", fontWeight: 800, color: "white" }}>{eastTotal} 🌴</span>
           </div>
         </div>
       </div>
@@ -552,15 +552,6 @@ export default function RingRingDerby() {
               <text x={cx} y={cy - 18} textAnchor="middle" fill="rgba(0,0,0,0.05)" fontSize="44" fontFamily="'Inter', sans-serif" fontWeight="900" letterSpacing="4">RING RING</text>
               <text x={cx} y={cy + 18} textAnchor="middle" fill="rgba(0,0,0,0.035)" fontSize="26" fontFamily="'Inter', sans-serif" fontWeight="800" letterSpacing="6">DERBY</text>
 
-              <g transform={`translate(${cx}, ${cy + 52})`}>
-                <rect x="-72" y="-9" width="62" height="18" rx="6" fill="rgba(74,111,165,0.08)" stroke="rgba(74,111,165,0.15)" strokeWidth="0.5" />
-                <text x="-60" y="1" fontSize="11">🌴</text>
-                <text x="-46" y="5" fill="#4A6FA5" fontSize="10" fontFamily="'Inter', sans-serif" fontWeight="700">EAST</text>
-                <rect x="10" y="-9" width="62" height="18" rx="6" fill="rgba(92,107,60,0.08)" stroke="rgba(92,107,60,0.15)" strokeWidth="0.5" />
-                <text x="22" y="1" fontSize="11">🏔</text>
-                <text x="36" y="5" fill="#5C6B3C" fontSize="10" fontFamily="'Inter', sans-serif" fontWeight="700">WEST</text>
-              </g>
-
               {/* Finish line */}
               {(() => {
                 const inner = getTrackPos(0, cx, cy, rx - 4, ry - 4);
@@ -653,17 +644,15 @@ export default function RingRingDerby() {
                     )}
 
                     {isHovered && phase >= PHASES.SETTLED && (
-                      <g transform={`translate(0, ${-emojiSize * 0.7 - 34})`}>
-                        <rect x="-82" y="-20" width="164" height="46" rx="10"
+                      <g transform={`translate(0, ${-emojiSize * 0.7 - 24})`}>
+                        <rect x="-68" y="-14" width="136" height="34" rx="10"
                           fill="white" stroke="#e5e5e5" strokeWidth="1"
                           style={{ filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.1))" }} />
-                        <text x="0" y="-5" textAnchor="middle" fill="#1a1a1a" fontSize="11" fontWeight="700" fontFamily="'Inter', sans-serif">{store.abbr} — {store.name}</text>
-                        <text x="0" y="9" textAnchor="middle" fill="#888" fontSize="8" fontWeight="600" fontFamily="'Inter', sans-serif">
+                        <text x="0" y="0" textAnchor="middle" fill="#888" fontSize="9" fontWeight="600" fontFamily="'Inter', sans-serif">
                           🕵️ {store.mystery}×1 · 📞 {store.calls}×3 · 🎯 {store.coaching}×5
                         </text>
-                        <text x="0" y="21" textAnchor="middle" fill={store.region === "East" ? "#4A6FA5" : "#5C6B3C"}
-                          fontSize="9" fontWeight="700" fontFamily="'Inter', sans-serif">
-                          {store.region === "East" ? "🌴" : "🏔"} {store.region} · {total} pts
+                        <text x="0" y="14" textAnchor="middle" fill="#1a1a1a" fontSize="10" fontWeight="800" fontFamily="'Inter', sans-serif">
+                          {store.abbr} · {total} pts
                         </text>
                       </g>
                     )}
