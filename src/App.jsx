@@ -218,12 +218,16 @@ export default function RingRingDerby() {
     const total = getTotal(store);
     const finalProgress = maxScore > 0 ? Math.min(total / maxScore, 0.90) : 0;
     
-    // For ties: find how many stores share this score and this store's index among them
+    // For ties: fan out so all visible
     const sameScoreStores = stores.filter(s => getTotal(s) === total);
     const tieIndex = sameScoreStores.findIndex(s => s.abbr === store.abbr);
-    const tieOffset = sameScoreStores.length > 1 ? (tieIndex - (sameScoreStores.length - 1) / 2) * 0.008 : 0;
+    const tieOffset = sameScoreStores.length > 1 && total > 0 
+      ? (tieIndex - (sameScoreStores.length - 1) / 2) * 0.018 
+      : 0;
     
-    const finalStaggered = total === 0 ? (i * 0.004) : (finalProgress + tieOffset);
+    // Zero-score horses cluster tightly at start, scored horses get a minimum boost
+    const minBoost = total > 0 ? 0.06 : 0;
+    const finalStaggered = total === 0 ? (i * 0.002) : (finalProgress + minBoost + tieOffset);
 
     if (phase <= PHASES.COUNTDOWN) {
       return i * 0.003;
