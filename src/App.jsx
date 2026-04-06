@@ -2,29 +2,31 @@ import { useState, useRef, useMemo, useEffect, useCallback } from "react";
 
 const STORES_INIT = [
   // EAST (🌴) — Dusty Blues
-  { name: "Fred Anderson Toyota of Raleigh", region: "East", silk: "#4A6FA5", silkAlt: "#A8C4E0", abbr: "TRA", calls: 0, mystery: 0, coaching: 0 },
-  { name: "Fred Anderson Kia of Raleigh", region: "East", silk: "#5B7FB5", silkAlt: "#C1D6EA", abbr: "KRA", calls: 0, mystery: 0, coaching: 0 },
-  { name: "Fred Anderson Nissan of Raleigh", region: "East", silk: "#3D5F8C", silkAlt: "#94B4D4", abbr: "NRA", calls: 0, mystery: 0, coaching: 0 },
-  { name: "Fred Anderson Toyota of Sanford", region: "East", silk: "#6889B0", silkAlt: "#D0DEE9", abbr: "TSA", calls: 0, mystery: 0, coaching: 0 },
-  { name: "Fred Anderson Toyota of Charleston", region: "East", silk: "#2E4F73", silkAlt: "#7FA5C4", abbr: "TCH", calls: 0, mystery: 0, coaching: 0 },
+  { name: "Fred Anderson Toyota of Raleigh", region: "East", silk: "#4A6FA5", silkAlt: "#A8C4E0", abbr: "TRA", calls: 0, mystery: 0, coaching: 0, ringgroup: 0, bonus: 0 },
+  { name: "Fred Anderson Kia of Raleigh", region: "East", silk: "#5B7FB5", silkAlt: "#C1D6EA", abbr: "KRA", calls: 0, mystery: 0, coaching: 0, ringgroup: 0, bonus: 0 },
+  { name: "Fred Anderson Nissan of Raleigh", region: "East", silk: "#3D5F8C", silkAlt: "#94B4D4", abbr: "NRA", calls: 0, mystery: 0, coaching: 0, ringgroup: 0, bonus: 0 },
+  { name: "Fred Anderson Toyota of Sanford", region: "East", silk: "#6889B0", silkAlt: "#D0DEE9", abbr: "TSA", calls: 0, mystery: 0, coaching: 0, ringgroup: 0, bonus: 0 },
+  { name: "Fred Anderson Toyota of Charleston", region: "East", silk: "#2E4F73", silkAlt: "#7FA5C4", abbr: "TCH", calls: 0, mystery: 0, coaching: 0, ringgroup: 0, bonus: 0 },
+  { name: "Fred Anderson Toyota of Cape Coral", region: "East", silk: "#3A6B9F", silkAlt: "#9AB8D8", abbr: "TCC", calls: 0, mystery: 0, coaching: 0, ringgroup: 0, bonus: 0 },
   // WEST (🏔) — Olive Greens
-  { name: "Fred Anderson Subaru", region: "West", silk: "#5C6B3C", silkAlt: "#B5C49A", abbr: "SAS", calls: 0, mystery: 0, coaching: 0 },
-  { name: "Fred Anderson Toyota of Asheville", region: "West", silk: "#6B7D45", silkAlt: "#C4D3A5", abbr: "TAS", calls: 0, mystery: 0, coaching: 0 },
-  { name: "Fred Anderson Nissan of Asheville", region: "West", silk: "#4E5D32", silkAlt: "#A3B285", abbr: "NAS", calls: 0, mystery: 0, coaching: 0 },
-  { name: "Fred Anderson Kia of Greer", region: "West", silk: "#7A8C52", silkAlt: "#D1DCBA", abbr: "KGR", calls: 0, mystery: 0, coaching: 0 },
-  { name: "Fred Anderson Toyota Greer", region: "West", silk: "#8A9A62", silkAlt: "#DDE5CC", abbr: "TGR", calls: 0, mystery: 0, coaching: 0 },
-  { name: "Fred Anderson Chevy Buick GMC Cadillac", region: "West", silk: "#6E7F48", silkAlt: "#C8D5AD", abbr: "CGR", calls: 0, mystery: 0, coaching: 0 },
-  { name: "Fred Anderson Hyundai", region: "West", silk: "#55693A", silkAlt: "#AFC092", abbr: "HGR", calls: 0, mystery: 0, coaching: 0 },
-  { name: "Genesis of Greer", region: "West", silk: "#445530", silkAlt: "#9AAD7E", abbr: "GGR", calls: 0, mystery: 0, coaching: 0 },
-  { name: "Fred Anderson Acura", region: "West", silk: "#637844", silkAlt: "#BDCCA2", abbr: "AGV", calls: 0, mystery: 0, coaching: 0 },
-  { name: "Fred Anderson Kia of Greenville", region: "West", silk: "#768B50", silkAlt: "#CDDAB5", abbr: "KGV", calls: 0, mystery: 0, coaching: 0 },
-  { name: "Fred Anderson Honda of Greenville", region: "West", silk: "#4A5E35", silkAlt: "#A6B88C", abbr: "HGV", calls: 0, mystery: 0, coaching: 0 },
+  { name: "Fred Anderson Subaru", region: "West", silk: "#5C6B3C", silkAlt: "#B5C49A", abbr: "SAS", calls: 0, mystery: 0, coaching: 0, ringgroup: 0, bonus: 0 },
+  { name: "Fred Anderson Toyota of Asheville", region: "West", silk: "#6B7D45", silkAlt: "#C4D3A5", abbr: "TAS", calls: 0, mystery: 0, coaching: 0, ringgroup: 0, bonus: 0 },
+  { name: "Fred Anderson Nissan of Asheville", region: "West", silk: "#4E5D32", silkAlt: "#A3B285", abbr: "NAS", calls: 0, mystery: 0, coaching: 0, ringgroup: 0, bonus: 0 },
+  { name: "Fred Anderson Kia of Greer", region: "West", silk: "#7A8C52", silkAlt: "#D1DCBA", abbr: "KGR", calls: 0, mystery: 0, coaching: 0, ringgroup: 0, bonus: 0 },
+  { name: "Fred Anderson Toyota Greer", region: "West", silk: "#8A9A62", silkAlt: "#DDE5CC", abbr: "TGR", calls: 0, mystery: 0, coaching: 0, ringgroup: 0, bonus: 0 },
+  { name: "Fred Anderson Chevy Buick GMC Cadillac", region: "West", silk: "#6E7F48", silkAlt: "#C8D5AD", abbr: "CGR", calls: 0, mystery: 0, coaching: 0, ringgroup: 0, bonus: 0 },
+  { name: "Fred Anderson Hyundai", region: "West", silk: "#55693A", silkAlt: "#AFC092", abbr: "HGR", calls: 0, mystery: 0, coaching: 0, ringgroup: 0, bonus: 0 },
+  { name: "Genesis of Greer", region: "West", silk: "#445530", silkAlt: "#9AAD7E", abbr: "GGR", calls: 0, mystery: 0, coaching: 0, ringgroup: 0, bonus: 0 },
+  { name: "Fred Anderson Acura", region: "West", silk: "#637844", silkAlt: "#BDCCA2", abbr: "AGV", calls: 0, mystery: 0, coaching: 0, ringgroup: 0, bonus: 0 },
+  { name: "Fred Anderson Kia of Greenville", region: "West", silk: "#768B50", silkAlt: "#CDDAB5", abbr: "KGV", calls: 0, mystery: 0, coaching: 0, ringgroup: 0, bonus: 0 },
+  { name: "Fred Anderson Honda of Greenville", region: "West", silk: "#4A5E35", silkAlt: "#A6B88C", abbr: "HGV", calls: 0, mystery: 0, coaching: 0, ringgroup: 0, bonus: 0 },
 ];
 
 const CATEGORIES = [
-  { key: "mystery", label: "Mystery Shop", desc: "Share Inbound Scorecard with a manager or rep", icon: "🕵️", short: "Mystery", pts: 1 },
-  { key: "calls", label: "Call Shares", desc: "Share 2 calls from CarWars with Liza from two separate individuals that both follow Call Guides", icon: "📞", short: "Calls", pts: 3 },
+  { key: "mystery", label: "Scorecard Sent", desc: "Send an Inbound Scorecard to a manager or rep", icon: "📋", short: "Scard", pts: 1, link: "https://anderson-scorecard.vercel.app/" },
+  { key: "calls", label: "Call Shares", desc: "Share 2 calls from CarWars featuring Call Guide from 2 different people", icon: "📞", short: "Calls", pts: 3 },
   { key: "coaching", label: "Mgr Ring Ring Session", desc: "Trainer attends a Manager-held Ring Ring session (observing)", icon: "🎯", short: "Mgr RR", pts: 5 },
+  { key: "ringgroup", label: "Made/Received Calls", desc: "Make or receive 3+ calls total in a day at a location — ask Laura to add you anytime", icon: "☎️", short: "Calls", pts: 5 },
 ];
 
 // Race phases: loading → gate → countdown → racing → settled → reveal
@@ -40,7 +42,7 @@ function getTrackPos(progress, cx, cy, rx, ry) {
 }
 
 function getTotal(store) {
-  return (store.calls * 3) + (store.mystery * 1) + (store.coaching * 5);
+  return (store.calls * 3) + (store.mystery * 1) + (store.coaching * 5) + (store.ringgroup * 5) + (store.bonus || 0);
 }
 
 export default function RingRingDerby() {
@@ -56,6 +58,7 @@ export default function RingRingDerby() {
   const [raceProgress, setRaceProgress] = useState(0); // 0 to 1
   const [standingsOpen, setStandingsOpen] = useState(false);
   const [howToScoreOpen, setHowToScoreOpen] = useState(false);
+  const [bonusOpen, setBonusOpen] = useState(false);
   const inputRef = useRef(null);
 
   // Load saved scores on mount — tries Google Sheet first, then window.storage
@@ -69,12 +72,12 @@ export default function RingRingDerby() {
           const rows = text.trim().split("\n").slice(1); // skip header
           const sheetData = rows.map(row => {
             const cols = row.split(",").map(c => c.trim());
-            return { abbr: cols[0], mystery: parseInt(cols[1]) || 0, calls: parseInt(cols[2]) || 0, coaching: parseInt(cols[3]) || 0 };
+            return { abbr: cols[0], mystery: parseInt(cols[1]) || 0, calls: parseInt(cols[2]) || 0, coaching: parseInt(cols[3]) || 0, ringgroup: parseInt(cols[4]) || 0, bonus: parseInt(cols[5]) || 0 };
           }).filter(d => d.abbr);
           if (sheetData.length > 0) {
             setStores(prev => prev.map(store => {
               const match = sheetData.find(s => s.abbr === store.abbr);
-              if (match) return { ...store, calls: match.calls, mystery: match.mystery, coaching: match.coaching };
+              if (match) return { ...store, calls: match.calls, mystery: match.mystery, coaching: match.coaching, ringgroup: match.ringgroup, bonus: match.bonus };
               return store;
             }));
             setLoaded(true);
@@ -90,7 +93,7 @@ export default function RingRingDerby() {
             const saved = JSON.parse(result.value);
             setStores(prev => prev.map(store => {
               const savedStore = saved.find(s => s.abbr === store.abbr);
-              if (savedStore) return { ...store, calls: savedStore.calls || 0, mystery: savedStore.mystery || 0, coaching: savedStore.coaching || 0 };
+              if (savedStore) return { ...store, calls: savedStore.calls || 0, mystery: savedStore.mystery || 0, coaching: savedStore.coaching || 0, ringgroup: savedStore.ringgroup || 0, bonus: savedStore.bonus || 0 };
               return store;
             }));
           }
@@ -100,7 +103,7 @@ export default function RingRingDerby() {
             const saved = JSON.parse(raw);
             setStores(prev => prev.map(store => {
               const savedStore = saved.find(s => s.abbr === store.abbr);
-              if (savedStore) return { ...store, calls: savedStore.calls || 0, mystery: savedStore.mystery || 0, coaching: savedStore.coaching || 0 };
+              if (savedStore) return { ...store, calls: savedStore.calls || 0, mystery: savedStore.mystery || 0, coaching: savedStore.coaching || 0, ringgroup: savedStore.ringgroup || 0, bonus: savedStore.bonus || 0 };
               return store;
             }));
           }
@@ -116,7 +119,7 @@ export default function RingRingDerby() {
     if (!loaded || SHEET_CSV_URL) return;
     const saveScores = async () => {
       try {
-        const toSave = stores.map(s => ({ abbr: s.abbr, calls: s.calls, mystery: s.mystery, coaching: s.coaching }));
+        const toSave = stores.map(s => ({ abbr: s.abbr, calls: s.calls, mystery: s.mystery, coaching: s.coaching, ringgroup: s.ringgroup, bonus: s.bonus }));
         if (window.storage) {
           await window.storage.set("derby-scores", JSON.stringify(toSave), true);
         } else {
@@ -179,7 +182,7 @@ export default function RingRingDerby() {
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); clearTimeout(t5); };
   }, [loaded]);
 
-  const TARGET_MAX = 50; // Full lap = 50 points, so small scores = small moves
+  const TARGET_MAX = 80; // Full lap = 80 points, so small scores = small moves
   const maxScore = TARGET_MAX;
   const rankedStores = [...stores].sort((a, b) => getTotal(b) - getTotal(a));
   const eastTotal = stores.filter(s => s.region === "East").reduce((sum, s) => sum + getTotal(s), 0);
@@ -187,7 +190,7 @@ export default function RingRingDerby() {
   const regionMax = Math.max(eastTotal + westTotal, 1);
 
   const now = new Date();
-  const deadlineDate = new Date("2026-03-31T23:59:59");
+  const deadlineDate = new Date("2026-04-30T23:59:59");
   const daysLeft = Math.max(0, Math.ceil((deadlineDate - now) / (1000 * 60 * 60 * 24)));
 
   const handleCellClick = (name, key, value) => {
@@ -274,7 +277,7 @@ export default function RingRingDerby() {
           {isEast ? "🌴" : "🏔"} {region}
         </div>
         <div style={{
-          display: "grid", gridTemplateColumns: "48px 1fr 58px 58px 58px 46px",
+          display: "grid", gridTemplateColumns: "48px 1fr 50px 50px 50px 50px 42px",
           gap: "3px", padding: "0 6px", marginBottom: "6px",
         }}>
           <div />
@@ -288,7 +291,7 @@ export default function RingRingDerby() {
         </div>
         {regionStores.map(store => (
           <div key={store.name} style={{
-            display: "grid", gridTemplateColumns: "48px 1fr 58px 58px 58px 46px",
+            display: "grid", gridTemplateColumns: "48px 1fr 50px 50px 50px 50px 42px",
             gap: "3px", padding: "5px 6px", borderRadius: "8px",
             background: "white", border: "1px solid #f0f0f0", marginBottom: "3px", alignItems: "center",
           }}>
@@ -366,7 +369,10 @@ export default function RingRingDerby() {
           The Ring Ring Derby 🏇
         </h1>
         <div style={{ fontSize: "13px", color: "#bbb", fontWeight: 500, letterSpacing: "3px", textTransform: "uppercase", marginTop: "2px" }}>
-          Phone Training Championship · March 2026
+          Phone Training Championship · April 2026
+        </div>
+        <div style={{ marginTop: "6px", display: "inline-block", padding: "3px 14px", borderRadius: "20px", background: "linear-gradient(135deg, #FEF3C7, #FDE68A)", border: "1px solid #F59E0B" }}>
+          <span style={{ fontSize: "10px", fontWeight: 800, letterSpacing: "2px", textTransform: "uppercase", color: "#92400E" }}>🔥 REMATCH — 3-Way Tie Breaker</span>
         </div>
       </div>
 
@@ -384,7 +390,7 @@ export default function RingRingDerby() {
         }}>
           <span style={{ fontSize: "22px", fontWeight: 900, color: daysLeft <= 7 ? "#DC2626" : "#1a1a1a" }}>{daysLeft}</span>
           <span style={{ fontSize: "9px", fontWeight: 700, letterSpacing: "1.5px", textTransform: "uppercase", color: "#999" }}>days left</span>
-          <span style={{ fontSize: "9px", color: "#ccc", marginTop: "1px" }}>ends March 31</span>
+          <span style={{ fontSize: "9px", color: "#ccc", marginTop: "1px" }}>ends April 30</span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "10px", padding: "10px 20px", background: "#EDF2F8", border: "1px solid #C8D6E5", borderRadius: "12px" }}>
           <span style={{ fontSize: "16px" }}>🌴</span>
@@ -434,7 +440,7 @@ export default function RingRingDerby() {
         </button>
         <div style={{
           overflow: "hidden",
-          maxHeight: howToScoreOpen ? "300px" : "0",
+          maxHeight: howToScoreOpen ? "600px" : "0",
           transition: "max-height 0.4s ease",
           background: "#FAFAFA", borderRadius: "0 0 12px 12px",
           border: howToScoreOpen ? "1px solid #eee" : "none",
@@ -449,7 +455,9 @@ export default function RingRingDerby() {
               }}>
                 <span style={{ fontSize: "20px", width: "28px", textAlign: "center" }}>{c.icon}</span>
                 <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: "13px", fontWeight: 700, color: "#333" }}>{c.label}</div>
+                  <div style={{ fontSize: "13px", fontWeight: 700, color: "#333" }}>
+                    {c.link ? <a href={c.link} target="_blank" rel="noopener noreferrer" style={{ color: "#4A6FA5", textDecoration: "underline" }}>{c.label}</a> : c.label}
+                  </div>
                   <div style={{ fontSize: "11px", fontWeight: 400, color: "#999" }}>{c.desc}</div>
                 </div>
                 <div style={{
@@ -459,11 +467,66 @@ export default function RingRingDerby() {
                 }}>+{c.pts}</div>
               </div>
             ))}
-            <div style={{ fontSize: "10px", color: "#999", textAlign: "center", marginTop: "10px", fontWeight: 600 }}>
-              All entries must be submitted to Liza for scoring
+            <div style={{
+              margin: "12px 0 8px", padding: "10px 14px", borderRadius: "10px",
+              background: "linear-gradient(135deg, #FEF3C7, #FDE68A)", border: "1px solid #F59E0B",
+            }}>
+              <div style={{ fontSize: "13px", fontWeight: 800, color: "#92400E", marginBottom: "2px" }}>⚡ DOUBLE DAYS</div>
+              <div style={{ fontSize: "11px", color: "#92400E" }}>Surprise Double Days will be announced by 8 AM — all activity that day counts for 2×!</div>
+            </div>
+            <div style={{ fontSize: "10px", color: "#999", textAlign: "center", marginTop: "8px", fontWeight: 600 }}>
+              Always bcc Laura + Liza for accurate scoring
             </div>
             <div style={{ fontSize: "10px", color: "#bbb", textAlign: "center", marginTop: "2px" }}>
-              Most points by March 31 wins 🏆
+              Most points by April 30 wins 🏆
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bonus Opportunities — accordion */}
+      <div style={{ maxWidth: "480px", margin: "0 auto 10px" }}>
+        <button onClick={() => setBonusOpen(!bonusOpen)} style={{
+          width: "100%", padding: "12px 18px",
+          background: "linear-gradient(135deg, #FFFBEB, #FEF3C7)", borderRadius: bonusOpen ? "12px 12px 0 0" : "12px",
+          border: "1px solid #F59E0B", borderBottom: bonusOpen ? "none" : "1px solid #F59E0B",
+          cursor: "pointer", display: "flex", justifyContent: "center", alignItems: "center", gap: "8px",
+          fontFamily: "'Inter', sans-serif",
+        }}>
+          <span style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "2px", textTransform: "uppercase", color: "#92400E" }}>
+            ⭐ Bonus Opportunities
+          </span>
+          <span style={{ fontSize: "12px", color: "#D97706", transition: "transform 0.3s ease", transform: bonusOpen ? "rotate(180deg)" : "rotate(0)" }}>▼</span>
+        </button>
+        <div style={{
+          overflow: "hidden",
+          maxHeight: bonusOpen ? "500px" : "0",
+          transition: "max-height 0.4s ease",
+          background: "#FFFBEB", borderRadius: "0 0 12px 12px",
+          border: bonusOpen ? "1px solid #F59E0B" : "none",
+          borderTop: "none",
+        }}>
+          <div style={{ padding: "0 18px 14px" }}>
+            {[
+              { icon: "🃏", title: "Wild Card Wednesday", desc: "Random Wednesdays, a surprise challenge drops — first store to complete it gets bonus points" },
+              { icon: "🥇", title: "First Blood", desc: "First store to score in any new category each week gets +2 bonus" },
+              { icon: "📸", title: "Call of the Week", desc: "Best call shared gets highlighted — that store earns +2 bonus and bragging rights" },
+              { icon: "🔥", title: "Hot Streak", desc: "Submit something 3 days in a row? Your store gets a +3 streak bonus" },
+            ].map((b, idx) => (
+              <div key={idx} style={{
+                display: "flex", alignItems: "center", gap: "10px",
+                padding: "8px 0",
+                borderBottom: idx < 3 ? "1px solid rgba(245,158,11,0.15)" : "none",
+              }}>
+                <span style={{ fontSize: "20px", width: "28px", textAlign: "center" }}>{b.icon}</span>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: "13px", fontWeight: 700, color: "#92400E" }}>{b.title}</div>
+                  <div style={{ fontSize: "11px", fontWeight: 400, color: "#B45309" }}>{b.desc}</div>
+                </div>
+              </div>
+            ))}
+            <div style={{ fontSize: "10px", color: "#B45309", textAlign: "center", marginTop: "8px", fontWeight: 600 }}>
+              Bonus points tracked in the ⭐ column — Laura awards these at her discretion
             </div>
           </div>
         </div>
@@ -644,12 +707,12 @@ export default function RingRingDerby() {
                     )}
 
                     {isHovered && phase >= PHASES.SETTLED && (
-                      <g transform={`translate(0, ${-emojiSize * 0.7 - 24})`}>
-                        <rect x="-68" y="-14" width="136" height="34" rx="10"
+                      <g transform={`translate(0, ${-emojiSize * 0.7 - 28})`}>
+                        <rect x="-92" y="-14" width="184" height="34" rx="10"
                           fill="white" stroke="#e5e5e5" strokeWidth="1"
                           style={{ filter: "drop-shadow(0 2px 8px rgba(0,0,0,0.1))" }} />
-                        <text x="0" y="0" textAnchor="middle" fill="#888" fontSize="9" fontWeight="600" fontFamily="'Inter', sans-serif">
-                          🕵️ {store.mystery}×1 · 📞 {store.calls}×3 · 🎯 {store.coaching}×5
+                        <text x="0" y="0" textAnchor="middle" fill="#888" fontSize="8" fontWeight="600" fontFamily="'Inter', sans-serif">
+                          📋{store.mystery}×1 · 📞{store.calls}×3 · 🎯{store.coaching}×5 · ☎️{store.ringgroup}×5{store.bonus > 0 ? ` · ⭐${store.bonus}` : ""}
                         </text>
                         <text x="0" y="14" textAnchor="middle" fill="#1a1a1a" fontSize="10" fontWeight="800" fontFamily="'Inter', sans-serif">
                           {store.abbr} · {total} pts
@@ -665,7 +728,7 @@ export default function RingRingDerby() {
       </div>
 
       {/* Standings — accordion that opens after race */}
-      <div style={{ maxWidth: "420px", margin: "12px auto 0" }}>
+      <div style={{ maxWidth: "520px", margin: "12px auto 0" }}>
         <button onClick={() => setStandingsOpen(!standingsOpen)} style={{
           width: "100%", padding: "12px 14px", background: "#fafafa", borderRadius: standingsOpen ? "14px 14px 0 0" : "14px",
           border: "1px solid #eee", borderBottom: standingsOpen ? "none" : "1px solid #eee",
@@ -687,22 +750,24 @@ export default function RingRingDerby() {
           <div style={{ padding: "0 8px 12px" }}>
             {/* Header */}
             <div style={{
-              display: "grid", gridTemplateColumns: "28px 20px 50px 1fr 1fr 1fr 44px",
+              display: "grid", gridTemplateColumns: "28px 20px 50px 1fr 1fr 1fr 1fr 1fr 44px",
               gap: "2px", padding: "8px 6px 6px", borderBottom: "1px solid #eee", marginBottom: "2px",
             }}>
               <div />
               <div />
               <div />
-              <div style={{ fontSize: "14px", fontWeight: 700, color: "#ccc", textAlign: "center" }}>🕵️</div>
+              <div style={{ fontSize: "14px", fontWeight: 700, color: "#ccc", textAlign: "center" }}>📋</div>
               <div style={{ fontSize: "14px", fontWeight: 700, color: "#ccc", textAlign: "center" }}>📞</div>
               <div style={{ fontSize: "14px", fontWeight: 700, color: "#ccc", textAlign: "center" }}>🎯</div>
+              <div style={{ fontSize: "14px", fontWeight: 700, color: "#ccc", textAlign: "center" }}>☎️</div>
+              <div style={{ fontSize: "14px", fontWeight: 700, color: "#ccc", textAlign: "center" }}>⭐</div>
               <div style={{ fontSize: "10px", fontWeight: 700, color: "#ccc", textAlign: "right" }}>PTS</div>
             </div>
             {rankedStores.map((store, i) => {
               const total = getTotal(store);
               return (
                 <div key={store.name} className="standing-row" style={{
-                  display: "grid", gridTemplateColumns: "28px 20px 50px 1fr 1fr 1fr 44px",
+                  display: "grid", gridTemplateColumns: "28px 20px 50px 1fr 1fr 1fr 1fr 1fr 44px",
                   gap: "2px", padding: "6px 6px", borderRadius: "8px", alignItems: "center",
                   background: i === 0 ? "#FAFBF5" : "white",
                   border: `1px solid ${i === 0 ? "#D5DCCA" : "#f5f5f5"}`,
@@ -721,6 +786,8 @@ export default function RingRingDerby() {
                   <div style={{ fontSize: "14px", fontWeight: 600, color: store.mystery > 0 ? "#555" : "#ddd", textAlign: "center" }}>{store.mystery}</div>
                   <div style={{ fontSize: "14px", fontWeight: 600, color: store.calls > 0 ? "#555" : "#ddd", textAlign: "center" }}>{store.calls}</div>
                   <div style={{ fontSize: "14px", fontWeight: 600, color: store.coaching > 0 ? "#555" : "#ddd", textAlign: "center" }}>{store.coaching}</div>
+                  <div style={{ fontSize: "14px", fontWeight: 600, color: store.ringgroup > 0 ? "#555" : "#ddd", textAlign: "center" }}>{store.ringgroup}</div>
+                  <div style={{ fontSize: "14px", fontWeight: 600, color: (store.bonus || 0) > 0 ? "#F59E0B" : "#ddd", textAlign: "center" }}>{store.bonus || 0}</div>
                   <div style={{ fontSize: "16px", fontWeight: 800, color: total > 0 ? "#1a1a1a" : "#ddd", textAlign: "right" }}>{total}</div>
                 </div>
               );
@@ -731,7 +798,7 @@ export default function RingRingDerby() {
 
       {/* Footer */}
       <div style={{ textAlign: "center", marginTop: "12px", fontSize: "9px", color: "#ddd", letterSpacing: "2px", textTransform: "uppercase" }}>
-        The Ring Ring Derby · Anderson Automotive Group · 2026
+        The Ring Ring Derby · Anderson Automotive Group · April 2026
       </div>
       </>
       )}
